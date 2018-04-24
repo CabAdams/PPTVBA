@@ -1,0 +1,46 @@
+'Customized for Project Tiberius
+Sub SectionName()
+Dim SecName As String
+Dim Index As Integer
+Dim SecShape As Shape
+Dim Shp As Shape
+Dim n As Integer
+
+For n = 1 To ActivePresentation.Slides.Count
+  'Skip Section Header
+  If ActivePresentation.Slides(n).CustomLayout.Name = "Section Header" Then
+  GoTo NextIteration
+  End If
+  
+  'Set Naming Variables
+  Index = ActivePresentation.Slides(n).sectionIndex
+  SecName = ActivePresentation.SectionProperties.Name(Index)
+  
+  'Delete Existing Section Name Box
+  For Each Shp In ActivePresentation.Slides(n).Shapes
+  On Error Resume Next
+  If Shp.TextFrame.TextRange.Text = SecName Then
+  Shp.Delete
+  End If
+  Next Shp
+  
+  'Create Section Name Box
+  Set SecShape = ActivePresentation.Slides(n).Shapes.AddShape(Type:=msoShapeRectangle, Left:=570, Top:=482, Width:=150, Height:=18) 'Update for desired size and location of section name box
+  SecShape.Name = "Section Title"
+  With SecShape
+  .Fill.ForeColor.RGB = RGB(255, 255, 255) 'Update for desired fill
+  .Line.ForeColor.RGB = RGB(164, 169, 173) 'Update for desired border color & weight
+  .Line.Weight = 1
+  .TextEffect.FontBold = msoCTrue
+  .TextEffect.FontSize = 10
+  .TextEffect.Alignment = msoTextEffectAlignmentCentered
+  .TextFrame.TextRange.Font.Color.RGB = RGB(0, 112, 194) 'Update for desired font color
+  .TextFrame.TextRange.Text = SecName
+  .Shadow.Visible = msoFalse
+  End With
+NextIteration:
+Next n
+
+End Sub
+
+
